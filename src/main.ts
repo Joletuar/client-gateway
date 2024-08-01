@@ -21,9 +21,9 @@ async function bootstrap() {
 
   app.useGlobalFilters(new RpcCustomExceptionFilter());
 
-  await app.listen(envs.port);
+  await app.listen(envs.PORT);
 
-  logger.log(`App running on port ${envs.port}`);
+  logger.log(`App running on port ${envs.PORT}`);
 }
 
 bootstrap();

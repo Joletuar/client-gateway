@@ -7,7 +7,7 @@ import { envs, NATS_SERVICE } from 'src/config';
     ClientsModule.register([
       {
         name: NATS_SERVICE,
-        transport: Transport.NATS, // debe tener el mismo protocolo de comunicación que se configuro en el micro de products
+        transport: Transport.NATS, // debe tener el mismo protocolo de comunicación que se configuro en los micros
         options: {
           servers: envs.NATS_SERVER,
         },
@@ -18,7 +18,7 @@ import { envs, NATS_SERVICE } from 'src/config';
     ClientsModule.register([
       {
         name: NATS_SERVICE,
-        transport: Transport.NATS, // debe tener el mismo protocolo de comunicación que se configuro en el micro de products
+        transport: Transport.NATS, // debe tener el mismo protocolo de comunicación que se configuro en los micros
         options: {
           servers: envs.NATS_SERVER,
         },

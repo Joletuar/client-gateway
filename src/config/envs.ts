@@ -4,10 +4,6 @@ import * as joi from 'joi';
 
 interface EnvVars {
   PORT: number;
-  PRODUCT_MS_HOST: string;
-  PRODUCT_MS_PORT: number;
-  ORDER_MS_HOST: string;
-  ORDER_MS_PORT: number;
   NATS_SERVER: Array<string>;
 }
 
@@ -31,7 +27,6 @@ if (error) {
 const envVars: EnvVars = value;
 
 export const envs = {
-  port: envVars.PORT,
-
+  PORT: envVars.PORT,
   NATS_SERVER: envVars.NATS_SERVER,
 };
