@@ -8,25 +8,31 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 
-import { CreateOrderDto } from './dto/create-order.dto';
-import { NATS_SERVICE } from 'src/config';
 import { firstValueFrom } from 'rxjs';
+
+import { CreateOrderDto } from './dto/create-order.dto';
+import { ORDERS_SERVICE } from 'src/config';
 import { OrderPaginationDto } from './dto/order-pagination.dto';
 import { StatusDto } from './dto/status.dto';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { AuthGuard } from 'src/auth/guards/auth/auth.guard';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
+  constructor(
+    @Inject(ORDERS_SERVICE) private readonly ordersClient: ClientProxy,
+  ) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto) {
     try {
       const order = await firstValueFrom(
-        this.client.send('createOrder', createOrderDto),
+        this.ordersClient.send('createOrder', createOrderDto),
       );
 
       return order;
@@ -39,7 +45,7 @@ export class OrdersController {
   async findAll(@Query() orderPaginationDto: OrderPaginationDto) {
     try {
       const oders = await firstValueFrom(
-        this.client.send('findAllOrders', orderPaginationDto),
+        this.ordersClient.send('findAllOrders', orderPaginationDto),
       );
       return oders;
     } catch (error) {
@@ -59,7 +65,7 @@ export class OrdersController {
   ) {
     try {
       const order = await firstValueFrom(
-        this.client.send('findOneOrder', { id }),
+        this.ordersClient.send('findOneOrder', { id }),
       );
 
       return order;
@@ -75,7 +81,7 @@ export class OrdersController {
   ) {
     try {
       const orders = await firstValueFrom(
-        this.client.send('findAllOrders', {
+        this.ordersClient.send('findAllOrders', {
           ...paginationDto,
           status: statusDto.status,
         }),
@@ -94,7 +100,7 @@ export class OrdersController {
   ) {
     try {
       const order = await firstValueFrom(
-        this.client.send('changeOrderStatus', {
+        this.ordersClient.send('changeOrderStatus', {
           id,
           status: statusDto.status,
         }),

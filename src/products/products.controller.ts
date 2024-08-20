@@ -11,20 +11,22 @@ import {
   Query,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
-
-import { NATS_SERVICE } from 'src/config';
-import { PaginationDto } from '../common/dtos/pagination.dto';
 import { firstValueFrom } from 'rxjs';
+
+import { PRODUCTS_SERVICE } from 'src/config';
+import { PaginationDto } from '../common/dtos/pagination.dto';
 
 @Controller('products')
 export class ProductsController {
-  constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
+  constructor(
+    @Inject(PRODUCTS_SERVICE) private readonly productsClient: ClientProxy,
+  ) {}
 
   @Post()
   async createProduct(@Body() data: any) {
     try {
       const product = await firstValueFrom(
-        this.client.send({ cmd: 'create_product' }, data), // esto es un observable
+        this.productsClient.send({ cmd: 'create_product' }, data), // esto es un observable
       );
 
       return product;
@@ -40,7 +42,7 @@ export class ProductsController {
 
     try {
       const products = await firstValueFrom(
-        this.client.send({ cmd: 'find_all_products' }, paginationDto),
+        this.productsClient.send({ cmd: 'find_all_products' }, paginationDto),
       );
 
       return products;
@@ -53,7 +55,7 @@ export class ProductsController {
   async findProduct(@Param('id') id: string) {
     try {
       const product = await firstValueFrom(
-        this.client.send({ cmd: 'find_one_product' }, { id }), // esto es un observable
+        this.productsClient.send({ cmd: 'find_one_product' }, { id }), // esto es un observable
       );
 
       return product;
@@ -69,7 +71,7 @@ export class ProductsController {
   ) {
     try {
       const product = await firstValueFrom(
-        this.client.send({ cmd: 'update_product' }, { id, ...data }), // esto es un observable
+        this.productsClient.send({ cmd: 'update_product' }, { id, ...data }), // esto es un observable
       );
 
       return product;
@@ -82,7 +84,7 @@ export class ProductsController {
   async deleteProduct(@Param('id') id: string) {
     try {
       const product = await firstValueFrom(
-        this.client.send({ cmd: 'delete_product' }, { id }), // esto es un observable
+        this.productsClient.send({ cmd: 'delete_product' }, { id }), // esto es un observable
       );
 
       return product;
