@@ -6,8 +6,6 @@ import { envs } from './config';
 import { RpcCustomExceptionFilter } from './common/exceptions';
 
 async function bootstrap() {
-  const logger = new Logger('Client-Gateway');
-
   const app = await NestFactory.create(AppModule);
 
   app.setGlobalPrefix('api', {
@@ -28,7 +26,15 @@ async function bootstrap() {
 
   app.useGlobalFilters(new RpcCustomExceptionFilter());
 
+  app.enableCors({
+    credentials: true,
+    origin: 'http://localhost:3000', //! TODO: cambiar esto a variable de entorno
+    methods: ['GET', 'PUT', 'POST', 'DELETE'],
+  });
+
   await app.listen(envs.PORT);
+
+  const logger = new Logger('Client-Gateway');
 
   logger.log(`App running on port ${envs.PORT}`);
 }
