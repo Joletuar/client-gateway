@@ -42,8 +42,8 @@ export class AuthController {
     }
   }
 
-  @Post('verify-token')
   @UseGuards(AuthGuard)
+  @Post('verify-token')
   verifyToken(@User() user: CurrentUser, @Token() token: string) {
     return { user, token };
   }
