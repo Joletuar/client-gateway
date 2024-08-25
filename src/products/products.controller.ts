@@ -9,12 +9,14 @@ import {
   Patch,
   Post,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 
 import { PRODUCTS_SERVICE } from 'src/config';
 import { PaginationDto } from '../common/dtos/pagination.dto';
+import { AuthGuard } from 'src/auth/guards/auth/auth.guard';
 
 @Controller('products')
 export class ProductsController {
@@ -22,6 +24,7 @@ export class ProductsController {
     @Inject(PRODUCTS_SERVICE) private readonly productsClient: ClientProxy,
   ) {}
 
+  @UseGuards(AuthGuard)
   @Post()
   async createProduct(@Body() data: any) {
     try {
@@ -64,6 +67,7 @@ export class ProductsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Patch(':id')
   async updateProduct(
     @Param('id', ParseIntPipe) id: number,
@@ -80,6 +84,7 @@ export class ProductsController {
     }
   }
 
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async deleteProduct(@Param('id') id: string) {
     try {
