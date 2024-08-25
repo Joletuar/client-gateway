@@ -22,12 +22,13 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 import { AuthGuard } from 'src/auth/guards/auth/auth.guard';
 
 @Controller('orders')
+@UseGuards(AuthGuard)
 export class OrdersController {
   constructor(
     @Inject(ORDERS_SERVICE) private readonly ordersClient: ClientProxy,
   ) {}
 
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Post()
   async create(@Body() createOrderDto: CreateOrderDto) {
     try {
