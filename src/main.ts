@@ -1,12 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, RequestMethod, ValidationPipe } from '@nestjs/common';
+import { Logger as PinoLogger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
 import { envs } from './config';
 import { RpcCustomExceptionFilter } from './common/exceptions';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
+
+  app.useLogger(app.get(PinoLogger));
 
   app.setGlobalPrefix('api', {
     exclude: [
@@ -34,9 +39,9 @@ async function bootstrap() {
 
   await app.listen(envs.PORT);
 
-  const logger = new Logger('Client-Gateway');
+  // const logger = new Logger('Bootstrap');
 
-  logger.log(`App running on port ${envs.PORT}`);
+  // logger.log(`App running on port ${envs.PORT}`);
 }
 
 bootstrap();
