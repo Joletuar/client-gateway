@@ -26,6 +26,7 @@ async function bootstrap() {
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
+      transform: true, // permite habilitar las transformaciones de los decoradores
     }),
   );
 
