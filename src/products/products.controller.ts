@@ -17,6 +17,7 @@ import { firstValueFrom } from 'rxjs';
 import { PRODUCTS_SERVICE } from 'src/config';
 import { PaginationDto } from '../common/dtos/pagination.dto';
 import { AuthGuard } from 'src/auth/guards/auth/auth.guard';
+import { CreateProductDto } from './dto';
 
 @Controller('products')
 export class ProductsController {
@@ -26,7 +27,7 @@ export class ProductsController {
 
   @UseGuards(AuthGuard)
   @Post()
-  async createProduct(@Body() data: any) {
+  async createProduct(@Body() data: CreateProductDto) {
     try {
       const product = await firstValueFrom(
         this.productsClient.send({ cmd: 'create_product' }, data), // esto es un observable
